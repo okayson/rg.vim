@@ -1,4 +1,4 @@
-rg.txt The front-end for ripgrep(rg).
+*rg.txt* The front-end for ripgrep(rg).
 
 ==============================================================================
 CONTENTS                                                           *rg-contents*
