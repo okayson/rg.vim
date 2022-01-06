@@ -1,2 +1,4 @@
 # rg.vim
-Front-end for ripgrep(rg).
+
+The front-end for ripgrep(rg).
+

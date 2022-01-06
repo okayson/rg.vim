@@ -1,0 +1,40 @@
+rg.txt The front-end for ripgrep(rg).
+
+==============================================================================
+CONTENTS                                                           *rg-contents*
+
+Introduction            |rg-introduction|
+Requirements            |rg-requirements|
+Usage                   |rg-usage|
+Interface               |rg-interface|
+  Commands              |rg-commands|
+  Functions             |rg-functions|
+  Variables             |rg-variables|
+  Key mappings          |rg-key-mappings|
+
+==============================================================================
+INTRODUCTION                                                   *rg-introduction*
+
+
+==============================================================================
+REQUIREMENTS                                                   *rg-requirements*
+
+==============================================================================
+USAGE                                                                 *rg-usage*
+
+==============================================================================
+INTERFACE                                                         *rg-interface*
+
+==============================================================================
+COMMANDS                                                           *rg-commands*
+
+==============================================================================
+FUNCTIONS                                                         *rg-functions*
+
+==============================================================================
+VARIABLES                                                         *rg-variables*
+
+==============================================================================
+KEY-MAPPINGS                                                   *rg-key-mappings*
+
+vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl:sw=4:sts=4:ts=4:et
