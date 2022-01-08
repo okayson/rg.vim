@@ -142,7 +142,21 @@ endfunction "}}}
 
 function! rg#update_view(grep_type, args) "{{{
 
-  " open result list
+  call rg#open_result_list(a:grep_type)
+  call rg#highlight_keyword(a:args)
+
+  redraw!
+
+  if l:matched_count == 0
+    echohl WarningMsg
+    echomsg 'No matched.'
+    echohl None
+  endif
+
+endfunction "}}}
+
+function! rg#open_result_list(grep_type) "{{{
+
   if a:grep_type =~# '^l'
     let l:matched_count = len(getloclist(winnr()))
     let l:list_open_command = ((g:rg_loclist_open == 1) ? (g:rg_loclist_position . ' lopen ' . g:rg_loclist_height) : '')
@@ -155,21 +169,25 @@ function! rg#update_view(grep_type, args) "{{{
     silent! execute l:list_open_command
   endif
 
-  " highlight
-  if g:rg_highlight == 1
-    "TODO:
-    echohl ErrorMsg
-    echomsg "'g:rg_highlight' is not implemented now."
-    echohl None
+endfunction "}}}
+
+function! rg#highlight_keyword(args) "{{{
+
+  if g:rg_highlight != 1
+    return
   end
 
-  redraw!
+  let l:args = a:args
+  let l:args = substitute(l:args, "'", '', 'g')
+  let l:args = substitute(l:args, '"', '', 'g')
+  let l:args = substitute(l:args, '|', ' ', 'g')
+  let l:args_list = split(l:args)
+  call filter(l:args_list, 'v:val !~ "-"')
+  call filter(l:args_list, '!isdirectory(v:val)')
+  call filter(l:args_list, '!filereadable(v:val)')
 
-  if l:matched_count == 0
-    echohl WarningMsg
-    echomsg 'No matched.'
-    echohl None
-  endif
+  let @/ = escape(join(l:args_list,'|'), '|')
+  call feedkeys(":let &hlsearch=1\<CR>", 'n')
 
 endfunction "}}}
 
