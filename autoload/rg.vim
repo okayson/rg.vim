@@ -57,10 +57,6 @@ function! rg#lrgadd(bang, args) "{{{
   call rg#invoke_grep('lgrepadd', a:bang, a:args)
 endfunction "}}}
 
-function! rg#opts() "{{{
-  echo rg#make_options()
-endfunction "}}}
-
 function! rg#invoke_grep(grep_type, bang, args) "{{{
 
   if !executable('rg')
@@ -161,7 +157,7 @@ function! rg#update_view(grep_type, args) "{{{
 
   " highlight
   if g:rg_highlight == 1
-    "TODO: 
+    "TODO:
     echohl ErrorMsg
     echomsg "'g:rg_highlight' is not implemented now."
     echohl None
@@ -176,6 +172,32 @@ function! rg#update_view(grep_type, args) "{{{
   endif
 
 endfunction "}}}
+
+function! rg#show_config() "{{{
+
+  echo 'g:rg_command              : ' . g:rg_command
+  echo 'g:rg_options              : ' . g:rg_options
+  echo 'g:rg_format               : ' . g:rg_format
+  echo 'g:rg_follow_case_setting  : ' . g:rg_follow_case_setting
+  echo 'g:rg_highlight            : ' . g:rg_highlight
+  echo 'g:rg_qflist_open          : ' . g:rg_qflist_open
+  echo 'g:rg_qflist_position      : ' . g:rg_qflist_position
+  echo 'g:rg_qflist_height        : ' . g:rg_qflist_height
+  echo 'g:rg_loclist_open         : ' . g:rg_loclist_open
+  echo 'g:rg_loclist_position     : ' . g:rg_loclist_position
+  echo 'g:rg_loclist_height       : ' . g:rg_loclist_height
+
+endfunction "}}}
+
+function! rg#show_implicit_opts() "{{{
+  echo rg#make_options()
+endfunction "}}}
+
+function! rg#follow_case_setting(enabled) "{{{
+  let g:rg_follow_case_setting = a:enabled
+  echo 'g:rg_follow_case_setting is set to ' . a:enabled
+endfunction "}}}
+
 " -------------------------------------------------
 let &cpo = s:save_cpo
 unlet s:save_cpo
