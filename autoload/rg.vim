@@ -136,7 +136,7 @@ function! rg#make_grep_command(grep_type, bang, args) "{{{
   call add(l:grep_command, rg#make_options())
   call add(l:grep_command, l:args)
 
-  return join(l:grep_command)
+  return escape(join(l:grep_command), '|')
 
 endfunction "}}}
 
