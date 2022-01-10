@@ -25,5 +25,8 @@ Basically, you can use typing as follows.
 Rg [options] {pattern} [{directory|file}]
 ```
 After the `[option]` field, you can specify the arguments that can be specified in ripgrep. See ripgrep's help (`$ rg --help`).  
-If you are interested in this plugin, see `doc/rg.vim` for more information about  `Configurations`, `Interfaces` and so on.
+If you are interested in this plugin, see [doc/rg.txt](doc/rg.txt) for more information about  `Configurations`, `Interfaces` and so on.
 
+<!--
+vim:tw=78:sw=4:sts=4:ts=4:et
+-->
