@@ -142,7 +142,7 @@ endfunction "}}}
 
 function! rg#update_view(grep_type, args) "{{{
 
-  call rg#open_result_list(a:grep_type)
+  let l:matched_count = rg#open_result_list(a:grep_type)
   call rg#highlight_keyword(a:args)
 
   redraw!
@@ -168,6 +168,8 @@ function! rg#open_result_list(grep_type) "{{{
   if l:matched_count && len(l:list_open_command)
     silent! execute l:list_open_command
   endif
+
+  return l:matched_count
 
 endfunction "}}}
 
