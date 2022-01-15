@@ -110,6 +110,79 @@ function s:test_highlight1() "{{{
   g:rg_highlight = l:save_rg_highlight
 endfunction
 command! TestHighlight1 call <SID>test_highlight1()
-"} Highlighting-Test
+"}}}
+
+" Option definition by dict
+function s:set_default_dictvalue(dict, key, value) "{{{
+  if !has_key(a:dict, a:key)
+    " let a:dict.a:key = a:value
+    let a:dict[a:key] = a:value
+  endif
+endfunction
+"}}}
+function s:test_opt_def() "{{{
+
+  echo '# Test - Add undefined option'
+  let l:rg = {}
+  call s:set_default_dictvalue(l:rg, 'command', 'rg')
+  echo l:rg
+
+  echo '# Test - Ignore defined option'
+  let l:rg = {}
+  let l:rg['command'] = 'rg2'
+  call s:set_default_dictvalue(l:rg, 'command', 'rg')
+  echo l:rg
+
+  echo '# Test - Add included dict'
+  let l:rg = {}
+  call s:set_default_dictvalue(l:rg, 'qflist', {})
+  call s:set_default_dictvalue(l:rg.qflist, 'open', 1)
+  call s:set_default_dictvalue(l:rg.qflist, 'position', 'botright')
+  call s:set_default_dictvalue(l:rg.qflist, 'height', '10')
+  echo l:rg
+
+  echo '# Test - Ignore defined option in included dict'
+  let l:rg = {}
+  let l:rg = {
+        \ 'command': 'rg2',
+        \ 'qflist': { 'open': 0 }
+        \}
+  call s:set_default_dictvalue(l:rg, 'command', 'rg')
+  call s:set_default_dictvalue(l:rg, 'qflist', {})
+  call s:set_default_dictvalue(l:rg.qflist, 'open', 1)
+  call s:set_default_dictvalue(l:rg.qflist, 'position', 'botright')
+  call s:set_default_dictvalue(l:rg.qflist, 'height', '10')
+  echo l:rg
+
+  " echo '# Test - template'
+  " let l:rg = {}
+  " echo l:rg
+
+endfunction
+command! TestOptDef call <SID>test_opt_def()
+"}}}
+function s:test_opt_def2() "{{{
+
+  echo '# Test - Set Default Values'
+  let l:rg = {}
+  call s:set_default_dictvalue(l:rg, 'command', 'rg')
+  call s:set_default_dictvalue(l:rg, 'options', '')
+  call s:set_default_dictvalue(l:rg, 'format', '%f:%l:%c:%m')
+  call s:set_default_dictvalue(l:rg, 'follow_case_setting', 1)
+  call s:set_default_dictvalue(l:rg, 'highlight', 0)
+  call s:set_default_dictvalue(l:rg, 'qflist', {})
+  call s:set_default_dictvalue(l:rg.qflist, 'open', 1)
+  call s:set_default_dictvalue(l:rg.qflist, 'position', 'botright')
+  call s:set_default_dictvalue(l:rg.qflist, 'height', '')
+  call s:set_default_dictvalue(l:rg, 'loclist', {})
+  call s:set_default_dictvalue(l:rg.loclist, 'open', 1)
+  call s:set_default_dictvalue(l:rg.loclist, 'position', 'botright')
+  call s:set_default_dictvalue(l:rg.loclist, 'height', '')
+  echo l:rg
+
+endfunction
+
+command! TestOptDef2 call <SID>test_opt_def2()
+"}}}
 
 " vim: ft=vim fdm=marker sw=2 sts=2 ts=2 et
