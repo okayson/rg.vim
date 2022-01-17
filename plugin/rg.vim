@@ -27,7 +27,6 @@ nnoremap <Plug>(rg-rg-cur-word)       :<C-u>Rg<CR>
 nnoremap <Plug>(rg-rgadd-cur-word)    :<C-u>RgAdd<CR>
 nnoremap <Plug>(rg-lrg-cur-word)      :<C-u>LRg<CR>
 nnoremap <Plug>(rg-lrgadd-cur-word)   :<C-u>LRgAdd<CR>
-nnoremap <Plug>(rg-lrgadd-cur-word)   :<C-u>LRgAdd<CR>
 
 " -------------------------------------------------
 let &cpo = s:save_cpo
