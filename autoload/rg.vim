@@ -3,7 +3,6 @@ let s:save_cpo = &cpo
 set cpo&vim
 " -------------------------------------------------
 
-" Configurations "{{{
 function! s:configure() "{{{
   if !exists('g:rg_config')
     let g:rg_config = {}
@@ -24,6 +23,7 @@ function! s:configure() "{{{
   call s:set_default_dictvalue(g:rg_config.loclist, 'height', '')
 endfunction
 "}}}
+
 function s:set_default_dictvalue(dict, key, value) "{{{
   if !has_key(a:dict, a:key)
     let a:dict[a:key] = a:value
@@ -31,27 +31,26 @@ function s:set_default_dictvalue(dict, key, value) "{{{
 endfunction
 "}}}
 
-call <SID>configure()
-
-"}}}
+" Set up configurations
+call s:configure()
 
 function! rg#rg(bang, args) "{{{
-  call rg#invoke_grep('grep', a:bang, a:args)
+  call s:invoke_grep('grep', a:bang, a:args)
 endfunction "}}}
 
 function! rg#rgadd(bang, args) "{{{
-  call rg#invoke_grep('grepadd', a:bang, a:args)
+  call s:invoke_grep('grepadd', a:bang, a:args)
 endfunction "}}}
 
 function! rg#lrg(bang, args) "{{{
-  call rg#invoke_grep('lgrep', a:bang, a:args)
+  call s:invoke_grep('lgrep', a:bang, a:args)
 endfunction "}}}
 
 function! rg#lrgadd(bang, args) "{{{
-  call rg#invoke_grep('lgrepadd', a:bang, a:args)
+  call s:invoke_grep('lgrepadd', a:bang, a:args)
 endfunction "}}}
 
-function! rg#invoke_grep(grep_type, bang, args) "{{{
+function! s:invoke_grep(grep_type, bang, args) "{{{
 
   if !executable('rg')
     echohl WarningMsg
@@ -60,7 +59,7 @@ function! rg#invoke_grep(grep_type, bang, args) "{{{
     return
   endif
 
-  let l:grep_command = rg#make_grep_command(a:grep_type, a:bang, a:args)
+  let l:grep_command = s:make_grep_command(a:grep_type, a:bang, a:args)
   if len(l:grep_command) == 0
     echohl WarningMsg
     echomsg 'Usage: Rg [options] {pattern} [{directory|file}]'
@@ -85,20 +84,20 @@ function! rg#invoke_grep(grep_type, bang, args) "{{{
   let &t_ti=l:save_t_ti
   let &t_te=l:save_t_te
 
-  call rg#update_view(a:grep_type, a:args)
+  call s:update_view(a:grep_type, a:args)
 
 endfunction "}}}
 
-function! rg#make_options() "{{{
+function! s:make_options() "{{{
 
   let l:options = []
   call add(l:options, g:rg_config.options)
-  call add(l:options, rg#make_case_options())
+  call add(l:options, s:make_case_options())
   return join(l:options)
 
 endfunction "}}}
 
-function! rg#make_case_options() "{{{
+function! s:make_case_options() "{{{
   let l:case_options = []
 
   if g:rg_config.follow_case_setting == 1
@@ -113,7 +112,7 @@ function! rg#make_case_options() "{{{
   return join(l:case_options)
 endfunction "}}}
 
-function! rg#make_grep_command(grep_type, bang, args) "{{{
+function! s:make_grep_command(grep_type, bang, args) "{{{
 
   let l:args = a:args
   if empty(l:args)
@@ -127,21 +126,22 @@ function! rg#make_grep_command(grep_type, bang, args) "{{{
   let l:grep_command = []
   call add(l:grep_command, a:grep_type . a:bang)
   call add(l:grep_command, '--vimgrep')
-  call add(l:grep_command, rg#make_options())
+  call add(l:grep_command, s:make_options())
   call add(l:grep_command, l:args)
 
   return escape(join(l:grep_command), '|')
 
 endfunction "}}}
 
-function! rg#update_view(grep_type, args) "{{{
+function! s:update_view(grep_type, args) "{{{
 
-  let l:matched_count = rg#open_result_list(a:grep_type)
-  call rg#highlight_keyword(a:args)
+  let l:matched_count = s:open_result_list(a:grep_type)
 
   redraw!
 
-  if l:matched_count == 0
+  if l:matched_count != 0
+    call s:highlight_keyword(a:args)
+  else
     echohl WarningMsg
     echomsg 'No matched.'
     echohl None
@@ -149,14 +149,16 @@ function! rg#update_view(grep_type, args) "{{{
 
 endfunction "}}}
 
-function! rg#open_result_list(grep_type) "{{{
+function! s:open_result_list(grep_type) "{{{
 
   if a:grep_type =~# '^l'
     let l:matched_count = len(getloclist(winnr()))
-    let l:list_open_command = ((g:rg_config.loclist.open == 1) ? (g:rg_config.loclist.position . ' lopen ' . g:rg_config.loclist.height) : '')
+    let l:list_open_command = ((g:rg_config.loclist.open == 1) ? 
+          \(g:rg_config.loclist.position . ' lopen ' . g:rg_config.loclist.height) : '')
   else
     let l:matched_count = len(getqflist())
-    let l:list_open_command = ((g:rg_config.qflist.open == 1)  ? (g:rg_config.qflist.position  . ' copen ' . g:rg_config.qflist.height)  : '')
+    let l:list_open_command = ((g:rg_config.qflist.open == 1)  ? 
+          \(g:rg_config.qflist.position  . ' copen ' . g:rg_config.qflist.height)  : '')
   endif
 
   if l:matched_count && len(l:list_open_command)
@@ -167,7 +169,7 @@ function! rg#open_result_list(grep_type) "{{{
 
 endfunction "}}}
 
-function! rg#highlight_keyword(args) "{{{
+function! s:highlight_keyword(args) "{{{
 
   if g:rg_config.highlight != 1
     return
@@ -183,7 +185,7 @@ function! rg#highlight_keyword(args) "{{{
   call filter(l:args_list, '!filereadable(v:val)')
 
   let @/ = escape(join(l:args_list,'|'), '|')
-  call feedkeys(":let &hlsearch=1\<CR>", 'n')
+  call feedkeys(":let &hlsearch=1 \| echo \<CR>", 'n')
 
 endfunction "}}}
 
@@ -204,7 +206,7 @@ function! rg#show_config() "{{{
 endfunction "}}}
 
 function! rg#show_implicit_opts() "{{{
-  echo rg#make_options()
+  echo s:make_options()
 endfunction "}}}
 
 function! rg#follow_case_setting(enabled) "{{{
