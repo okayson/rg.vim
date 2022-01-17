@@ -3,42 +3,36 @@ let s:save_cpo = &cpo
 set cpo&vim
 " -------------------------------------------------
 
-" Option Variables "{{{
-if !exists('g:rg_command')
-  let g:rg_command = 'rg'
-endif
-if !exists('g:rg_options')
-  let g:rg_options = ''
-endif
-if !exists('g:rg_format')
-  let g:rg_format = "%f:%l:%c:%m"
-endif
-if !exists('g:rg_follow_case_setting')
-  let g:rg_follow_case_setting = 1
-endif
-if !exists('g:rg_highlight')
-  let g:rg_highlight = 0
-endif
-if !exists('g:rg_qflist_open')
-  let g:rg_qflist_open = 1
-endif
-if !exists('g:rg_qflist_position')
-  let g:rg_qflist_position = ''
-  "let g:rg_qflist_position = 'botright'
-endif
-if !exists('g:rg_qflist_height')
-  let g:rg_qflist_height = ''
-endif
-if !exists('g:rg_loclist_open')
-  let g:rg_loclist_open = 1
-endif
-if !exists('g:rg_loclist_position')
-  let g:rg_loclist_position = ''
-  "let g:rg_loclist_position = 'botright'
-endif
-if !exists('g:rg_loclist_height')
-  let g:rg_loclist_height = ''
-endif
+" Configurations "{{{
+function! s:configure() "{{{
+  if !exists('g:rg_config')
+    let g:rg_config = {}
+  endif
+
+  call s:set_default_dictvalue(g:rg_config, 'command', 'rg')
+  call s:set_default_dictvalue(g:rg_config, 'options', '')
+  call s:set_default_dictvalue(g:rg_config, 'format', '%f:%l:%c:%m')
+  call s:set_default_dictvalue(g:rg_config, 'follow_case_setting', 1)
+  call s:set_default_dictvalue(g:rg_config, 'highlight', 0)
+  call s:set_default_dictvalue(g:rg_config, 'qflist', {})
+  call s:set_default_dictvalue(g:rg_config.qflist, 'open', 1)
+  call s:set_default_dictvalue(g:rg_config.qflist, 'position', 'botright')
+  call s:set_default_dictvalue(g:rg_config.qflist, 'height', '')
+  call s:set_default_dictvalue(g:rg_config, 'loclist', {})
+  call s:set_default_dictvalue(g:rg_config.loclist, 'open', 1)
+  call s:set_default_dictvalue(g:rg_config.loclist, 'position', 'botright')
+  call s:set_default_dictvalue(g:rg_config.loclist, 'height', '')
+endfunction
+"}}}
+function s:set_default_dictvalue(dict, key, value) "{{{
+  if !has_key(a:dict, a:key)
+    let a:dict[a:key] = a:value
+  endif
+endfunction
+"}}}
+
+call <SID>configure()
+
 "}}}
 
 function! rg#rg(bang, args) "{{{
@@ -79,8 +73,8 @@ function! rg#invoke_grep(grep_type, bang, args) "{{{
   let l:save_t_ti = &t_ti
   let l:save_t_te = &t_te
 
-  let &grepprg=g:rg_command
-  let &grepformat=g:rg_format
+  let &grepprg=g:rg_config.command
+  let &grepformat=g:rg_config.format
   set t_ti=
   set t_te=
 
@@ -98,7 +92,7 @@ endfunction "}}}
 function! rg#make_options() "{{{
 
   let l:options = []
-  call add(l:options, g:rg_options)
+  call add(l:options, g:rg_config.options)
   call add(l:options, rg#make_case_options())
   return join(l:options)
 
@@ -107,7 +101,7 @@ endfunction "}}}
 function! rg#make_case_options() "{{{
   let l:case_options = []
 
-  if g:rg_follow_case_setting == 1
+  if g:rg_config.follow_case_setting == 1
     if &ignorecase == 1
       call add(l:case_options, '--ignore-case')
     endif
@@ -159,10 +153,10 @@ function! rg#open_result_list(grep_type) "{{{
 
   if a:grep_type =~# '^l'
     let l:matched_count = len(getloclist(winnr()))
-    let l:list_open_command = ((g:rg_loclist_open == 1) ? (g:rg_loclist_position . ' lopen ' . g:rg_loclist_height) : '')
+    let l:list_open_command = ((g:rg_config.loclist.open == 1) ? (g:rg_config.loclist.position . ' lopen ' . g:rg_config.loclist.height) : '')
   else
     let l:matched_count = len(getqflist())
-    let l:list_open_command = ((g:rg_qflist_open == 1)  ? (g:rg_qflist_position  . ' copen ' . g:rg_qflist_height)  : '')
+    let l:list_open_command = ((g:rg_config.qflist.open == 1)  ? (g:rg_config.qflist.position  . ' copen ' . g:rg_config.qflist.height)  : '')
   endif
 
   if l:matched_count && len(l:list_open_command)
@@ -175,7 +169,7 @@ endfunction "}}}
 
 function! rg#highlight_keyword(args) "{{{
 
-  if g:rg_highlight != 1
+  if g:rg_config.highlight != 1
     return
   end
 
@@ -195,17 +189,17 @@ endfunction "}}}
 
 function! rg#show_config() "{{{
 
-  echo 'g:rg_command              : ' . g:rg_command
-  echo 'g:rg_options              : ' . g:rg_options
-  echo 'g:rg_format               : ' . g:rg_format
-  echo 'g:rg_follow_case_setting  : ' . g:rg_follow_case_setting
-  echo 'g:rg_highlight            : ' . g:rg_highlight
-  echo 'g:rg_qflist_open          : ' . g:rg_qflist_open
-  echo 'g:rg_qflist_position      : ' . g:rg_qflist_position
-  echo 'g:rg_qflist_height        : ' . g:rg_qflist_height
-  echo 'g:rg_loclist_open         : ' . g:rg_loclist_open
-  echo 'g:rg_loclist_position     : ' . g:rg_loclist_position
-  echo 'g:rg_loclist_height       : ' . g:rg_loclist_height
+  echo 'g:rg_config.command              : ' . g:rg_config.command
+  echo 'g:rg_config.options              : ' . g:rg_config.options
+  echo 'g:rg_config.format               : ' . g:rg_config.format
+  echo 'g:rg_config.follow_case_setting  : ' . g:rg_config.follow_case_setting
+  echo 'g:rg_config.highlight            : ' . g:rg_config.highlight
+  echo 'g:rg_config.qflist.open          : ' . g:rg_config.qflist.open
+  echo 'g:rg_config.qflist.position      : ' . g:rg_config.qflist.position
+  echo 'g:rg_config.qflist.height        : ' . g:rg_config.qflist.height
+  echo 'g:rg_config.loclist.open         : ' . g:rg_config.loclist.open
+  echo 'g:rg_config.loclist.position     : ' . g:rg_config.loclist.position
+  echo 'g:rg_config.loclist.height       : ' . g:rg_config.loclist.height
 
 endfunction "}}}
 
@@ -214,8 +208,8 @@ function! rg#show_implicit_opts() "{{{
 endfunction "}}}
 
 function! rg#follow_case_setting(enabled) "{{{
-  let g:rg_follow_case_setting = a:enabled
-  echo 'g:rg_follow_case_setting is set to ' . a:enabled
+  let g:rg_config['follow_case_setting'] = a:enabled
+  echo 'g:rg_config.follow_case_setting is set to ' . a:enabled
 endfunction "}}}
 
 " -------------------------------------------------
