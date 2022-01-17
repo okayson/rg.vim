@@ -12,7 +12,7 @@ function! s:configure() "{{{
   call s:set_default_dictvalue(g:rg_config, 'options', '')
   call s:set_default_dictvalue(g:rg_config, 'format', '%f:%l:%c:%m')
   call s:set_default_dictvalue(g:rg_config, 'follow_case_setting', 1)
-  call s:set_default_dictvalue(g:rg_config, 'highlight', 0)
+  call s:set_default_dictvalue(g:rg_config, 'highlight', 1)
   call s:set_default_dictvalue(g:rg_config, 'qflist', {})
   call s:set_default_dictvalue(g:rg_config.qflist, 'open', 1)
   call s:set_default_dictvalue(g:rg_config.qflist, 'position', 'botright')
