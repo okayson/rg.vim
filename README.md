@@ -71,13 +71,13 @@ let g:rg_config  = {
 
 |Command                       |Description                                                                               |
 |------------------------------|------------------------------------------------------------------------------------------|
-|`Rg`[!] [option] {pattern} [dir|file]    |Search pattern and open new quickfix list.                                                |
-|`RgAdd`[!] [option] {pattern} [dir|file]|Search pattern and append result to the current quickfix list.                            |
-|`LRg`[!] [option] {pattern} [dir|file]   |Search pattern and open new location list.                                                |
-|`LRgAdd`[!] [option] {pattern} [dir|file]|Search pattern and append result to the current location list.                            |
+|`Rg[!] [option] {pattern} [dir\|file]`    |Search pattern and open new quickfix list.                                                |
+|`RgAdd[!] [option] {pattern} [dir\|file]`|Search pattern and append result to the current quickfix list.                            |
+|`LRg[!] [option] {pattern} [dir\|file]`   |Search pattern and open new location list.                                                |
+|`LRgAdd[!] [option] {pattern} [dir\|file]`|Search pattern and append result to the current location list.                            |
 |`RgShowConfig`                |Shows the configurations for this plugin.                                                 |
 |`RgShowImplicitOpts`          |Shows implicit options set by `g:rg_config.options` and `g:rg_config.follow_case_setting`.|
-|`RgFollowCaseSetting` [0|1]   |Set enable(1) or disable(1) to `g:rg_config.follow_case_setting`.                         |
+|`RgFollowCaseSetting [0\|1]`   |Set enable(1) or disable(1) to `g:rg_config.follow_case_setting`.                         |
 
 Note: Regarding the search commands, After the `[option]` field, you can specify the arguments that can be specified in ripgrep. See ripgrep's help (`$ rg --help`).
 
