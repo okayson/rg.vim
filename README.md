@@ -57,7 +57,7 @@ let g:rg_config = {
 |`loclist.position`   |botright   |Position of location list.                                                                           |
 |`loclist.height`     |           |Height of location list.                                                                             |
 
-You can over overwrite the default configurations.
+You can overwrite the default configurations.
 For example, If you want to set `options`, write the follows in your `.vimrc`.
 
 ```vim

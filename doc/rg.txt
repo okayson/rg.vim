@@ -1,8 +1,7 @@
 *rg.txt* The front-end for ripgrep(rg).
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-Now under writing. Coming soon!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Author: okayson (https://github.com/okayson)
+License: MIT License
 
 ==============================================================================
 CONTENTS                                                           *rg-contents*
@@ -10,21 +9,91 @@ CONTENTS                                                           *rg-contents*
 Introduction            |rg-introduction|
 Requirements            |rg-requirements|
 Usage                   |rg-usage|
+Configuration           |rg-configuration|
 Interface               |rg-interface|
-  Commands              |rg-commands|
-  Functions             |rg-functions|
-  Variables             |rg-variables|
-  Key mappings          |rg-key-mappings|
+      Commands          |rg-commands|
+      Functions         |rg-functions|
+      Key mappings      |rg-key-mappings|
 
 ==============================================================================
 INTRODUCTION                                                   *rg-introduction*
 
+This plugin is a front end for ripgrep(rg).
 
 ==============================================================================
 REQUIREMENTS                                                   *rg-requirements*
 
+This plugin requires the follows.
+
+- ripgrep
+
 ==============================================================================
 USAGE                                                                 *rg-usage*
+
+You can use |Rg| in vim like rg in terminal.
+>
+        Rg --hidden foo
+<
+
+==============================================================================
+CONFIGURATION                                                 *rg-configuration*
+
+g:rg_config                                                        *g:rg_config*
+        All the configurations are stored in this global variable.
+
+        Default values are:
+>
+        let g:rg_config = {
+            \ 'command': 'rg',
+            \ 'options': '',
+            \ 'format': '%f:%l:%c:%m',
+            \ 'follow_case_setting': 1,
+            \ 'highlight': 1,
+            \ 'qflist' : { 'open': 1, 'position': 'botright', 'height': '' }
+            \ 'loclist': { 'open': 1, 'position': 'botright', 'height': '' }
+            \}
+<
+        command
+            Path to rg command. You can set this If you install rg to the path 
+            which is not included $PATH.
+
+        options
+            ripgrep options you want to set always.
+
+        format
+            Format of search result.
+
+        follow_case_setting
+            Whether the plugin follows *ignorecase* and *smartcase*.
+
+        highlight
+            Whether use highlighting or not.
+
+        qflist.open
+            Whether open quickfix list after finish searching.
+
+        qflist.position
+            Position of quickfix list.
+
+        qflist.height
+            Height of quickfix list.
+
+        loclist.open
+            Whether open location list after finish searching.
+
+        loclist.position
+            Position of location list.
+
+        loclist.height
+            Height of location list.
+
+
+        You can overwrite the default values.
+>
+        let g:rg_config  = {
+            \ 'options': '--hidden'
+            \ }
+<
 
 ==============================================================================
 INTERFACE                                                         *rg-interface*
@@ -32,13 +101,69 @@ INTERFACE                                                         *rg-interface*
 ==============================================================================
 COMMANDS                                                           *rg-commands*
 
+If [!] is given, the first error is not jumped to.
+After the [option] field, you can specify the arguments that can be specified 
+same as ripgrep.
+
+:Rg[!] [option] {pattern} [directory]                                       *Rg*
+        Search pattern and open new quickfix list.
+
+:RgAdd[!] [option] {pattern} [directory]                                 *RgAdd*
+        Search pattern and append result to the current quickfix list.
+
+:LRg[!] [option] {pattern} [directory]                                     *LRg*
+        Search pattern and open new location list.
+
+:LRgAdd[!] [option] {pattern} [directory]                               *LRgAdd*
+        Search pattern and append result to the current location list.
+
+:RgShowConfig                                                     *RgShowConfig*
+        Shows the configurations for this plugin.
+
+:RgShowImplicitOpts                                         *RgShowImplicitOpts*
+        Shows implicit options set by g:rg_config.options and 
+        g:rg_config.follow_case_setting.
+
+:RgFollowCaseSetting [enabled]	                           *RgFollowCaseSetting*
+        Set enable(1) or disable(1) to g:rg_config.follow_case_setting.
+
 ==============================================================================
 FUNCTIONS                                                         *rg-functions*
 
 ==============================================================================
-VARIABLES                                                         *rg-variables*
-
-==============================================================================
 KEY-MAPPINGS                                                   *rg-key-mappings*
 
-vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl:sw=4:sts=4:ts=4:et
+<Plug>(rg-rg)                                                    *<Plug>(rg-rg)*
+        Command: |Rg|<Space>	
+        Put Rg on the command area.
+
+<Plug>(rg-rgadd)                                              *<Plug>(rg-rgadd)*
+        Command: |RgAdd|<Space>
+        Put RgAdd on the command area.
+
+<Plug>(rg-lrg)                                                  *<Plug>(rg-lrg)*
+        Command: |LRg|<Space>
+        Put LRg on the command area.
+
+<Plug>(rg-lrgadd)                                            *<Plug>(rg-lrgadd)*
+        Command: |LRgAdd|<Space>
+        Put LRgAdd on the command area.
+
+<Plug>(rg-rg-cur-word)                                  *<Plug>(rg-rg-cur-word)*
+        Command: |Rg|<CR>
+        Run Rg with the word at the current cursor.
+
+<Plug>(rg-rgadd-cur-word)                            *<Plug>(rg-rgadd-cur-word)*
+        Command: |RgAdd|<CR>
+        Run RgAdd with the word at the current cursor.
+
+<Plug>(rg-lrg-cur-word)                                *<Plug>(rg-lrg-cur-word)*
+        |LRg|<CR>
+        Run LRg with the word at the current cursor.
+
+<Plug>(rg-lrgadd-cur-word)                          *<Plug>(rg-lrgadd-cur-word)*
+        |LRgAdd|<CR>
+        Run LRgAdd with the word at the current cursor.
+
+==============================================================================
+vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl:et
