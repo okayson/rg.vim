@@ -94,6 +94,10 @@ Note: Regarding the search commands, After the `[option]` field, you can specify
 |`<Plug>(rg-lrg-cur-word)`   |`LRg<CR>`      |Run `LRg` with the word at the current cursor.   |
 |`<Plug>(rg-lrgadd-cur-word)`|`LRgAdd<CR>`   |Run `LRgAdd` with the word at the current cursor.|
 
+## License
+
+MIT
+
 <!--
 vim:tw=78:sw=4:sts=4:ts=4:et
 -->
